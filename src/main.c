@@ -11,11 +11,11 @@ struct Node {
 };
 
 struct LinkedList {
-  int nodeCount;
+  size_t nodeCount;
   struct Node *list[];
 };
 
-struct LinkedList *InitLinkedList(int nodeCount);
+struct LinkedList *InitLinkedList(size_t nodeCount);
 void *listGetData(struct LinkedList *list, size_t index);
 void listAppend(struct LinkedList *list, size_t index, void *data);
 
@@ -28,6 +28,7 @@ int main(void) {
 void listAppend(struct LinkedList *list, size_t index, void *data) {
   struct Node *newNode = malloc(sizeof(struct Node));
   newNode->data = data;
+  newNode->nextNode = NULL;
   list->list[index] = newNode;
 }
 
@@ -39,10 +40,15 @@ void *listGetData(struct LinkedList *list, size_t index) {
   return NULL;
 }
 
-struct LinkedList *InitLinkedList(int nodeCount) {
+struct LinkedList *InitLinkedList(size_t nodeCount) {
   struct LinkedList *list =
       malloc(sizeof(struct LinkedList) + sizeof(struct Node) * nodeCount);
   list->nodeCount = nodeCount;
+
+  for (size_t i = 0; i < list->nodeCount; i++) {
+    list->list[i]->data = NULL;
+    list->list[i]->nextNode = NULL;
+  }
 
   return list;
 }
